@@ -1,17 +1,20 @@
 import mongoose from "mongoose";
 
 const TaskSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  dueDate: String,
-  priority: {
-    type: String,
-    enum: ["LOW", "MEDIUM", "HIGH", "NONE"],
-    default: "LOW",
-  },
-  status: {
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  dueDate: { type: String, required: true },
+  status: { type: String, required: true },
+  priority: { type: String, default: "LOW" },
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Column", // Dynamic column reference
+    ref: "User",
+    required: true,
+  },
+  columnId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Column",
+    required: true,
   },
 });
 

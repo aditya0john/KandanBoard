@@ -1,22 +1,28 @@
 "use client";
+import { theme } from "@/lib/data";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
-function ProgressBarForm() {
+
+function ProgressBarForm({ onLoginSuccess }: { onLoginSuccess: () => void }) {
   const [progress, setProgress] = useState(0);
+  const [OTP, setOtp] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [toggle, setToggle] = useState(false);
 
-  const [detials, setDetails] = useState({
-    FullName: "",
-    Address: "",
-    Role: "",
-    CompanyName: "",
+  const router = useRouter();
+
+  const [details, setDetails] = useState({
+    UserName: "",
+    Email: "",
+    Password: "",
+    ConfirmPassword: "",
+    otp: "",
   });
 
-  const [stages, setStages] = useState([
-    "Personal Details",
-    "Address",
-    "Billing Details",
-    "Payment",
-  ]);
+  const stages = ["Personal Details", "Verification"];
 
   const renderform = () => {
     switch (progress) {
@@ -29,16 +35,16 @@ function ProgressBarForm() {
                   toggle === false ? theme.textLight : theme.textDark
                 } mx-1 font-semibold`}
               >
-                Name
+                User Name
               </label>
               <input
                 type="text"
-                value={detials.FullName}
-                placeholder="type your Full Name"
+                value={details.UserName}
+                placeholder="type your user name"
                 onChange={(e) => {
                   setDetails((prevDetails) => ({
                     ...prevDetails,
-                    FullName: e.target.value,
+                    UserName: e.target.value,
                   }));
                 }}
                 className={`rounded-lg text-black border-2 ${
@@ -55,16 +61,16 @@ function ProgressBarForm() {
                   toggle === false ? theme.textLight : theme.textDark
                 } mx-1 font-semibold`}
               >
-                Role
+                E-Mail
               </label>
               <input
-                type="text"
-                value={detials.Role}
-                placeholder="type the role you are provided"
+                type="email"
+                value={details.Email}
+                placeholder="type your email, Example : xyz123@gmail.com"
                 onChange={(e) => {
                   setDetails((prevDetails) => ({
                     ...prevDetails,
-                    Role: e.target.value,
+                    Email: e.target.value,
                   }));
                 }}
                 className={`rounded-lg text-black border-2 ${
@@ -81,16 +87,42 @@ function ProgressBarForm() {
                   toggle === false ? theme.textLight : theme.textDark
                 } mx-1 font-semibold`}
               >
-                Company Name
+                Password
               </label>
               <input
-                type="text"
-                value={detials.CompanyName}
-                placeholder="example : company_xyz"
+                type="password"
+                value={details.Password}
+                placeholder="type a password"
                 onChange={(e) => {
                   setDetails((prevDetails) => ({
                     ...prevDetails,
-                    CompanyName: e.target.value,
+                    Password: e.target.value,
+                  }));
+                }}
+                className={`rounded-lg text-black border-2 ${
+                  toggle === false
+                    ? "bg-white border-gray-200"
+                    : "bg-gray-00 border-gray-500 placeholder:text-gray-500"
+                }  px-4 py-2 w-full`}
+              ></input>
+            </span>
+
+            <span>
+              <label
+                className={`${
+                  toggle === false ? theme.textLight : theme.textDark
+                } mx-1 font-semibold`}
+              >
+                ConfirmPassword
+              </label>
+              <input
+                type="password"
+                value={details.ConfirmPassword}
+                placeholder="type your password again"
+                onChange={(e) => {
+                  setDetails((prevDetails) => ({
+                    ...prevDetails,
+                    ConfirmPassword: e.target.value,
                   }));
                 }}
                 className={`rounded-lg text-black border-2 ${
@@ -112,94 +144,16 @@ function ProgressBarForm() {
                   toggle === false ? theme.textLight : theme.textDark
                 } mx-1 font-semibold`}
               >
-                Address
+                OTP
               </label>
               <input
                 type="text"
-                value={detials.FullName}
-                placeholder="type your address"
+                value={details.otp}
+                placeholder="enter the OTP sent to your mail"
                 onChange={(e) => {
                   setDetails((prevDetails) => ({
                     ...prevDetails,
-                    FullName: e.target.value,
-                  }));
-                }}
-                className={`rounded-lg text-black border-2 ${
-                  toggle === false
-                    ? "bg-white border-gray-200"
-                    : "bg-gray-00 border-gray-500 placeholder:text-gray-500"
-                }  px-4 py-2 w-full`}
-              ></input>
-            </span>
-            <span>
-              {" "}
-              <label
-                className={`${
-                  toggle === false ? theme.textLight : theme.textDark
-                } mx-1 font-semibold`}
-              >
-                Address
-              </label>
-              <input
-                type="text"
-                value={detials.Address}
-                placeholder="house number - state - area - landmark"
-                onChange={(e) => {
-                  setDetails((prevDetails) => ({
-                    ...prevDetails,
-                    Address: e.target.value,
-                  }));
-                }}
-                className={`rounded-lg text-black border-2 ${
-                  toggle === false
-                    ? "bg-white border-gray-200"
-                    : "bg-gray-00 border-gray-500 placeholder:text-gray-500"
-                }  px-4 py-2 w-full`}
-              ></input>
-            </span>
-
-            <span>
-              <label
-                className={`${
-                  toggle === false ? theme.textLight : theme.textDark
-                } mx-1 font-semibold`}
-              >
-                Role
-              </label>
-              <input
-                type="text"
-                value={detials.Role}
-                placeholder="type the role you are provided"
-                onChange={(e) => {
-                  setDetails((prevDetails) => ({
-                    ...prevDetails,
-                    Role: e.target.value,
-                  }));
-                }}
-                className={`rounded-lg text-black border-2 ${
-                  toggle === false
-                    ? "bg-white border-gray-200"
-                    : "bg-gray-00 border-gray-500 placeholder:text-gray-500"
-                }  px-4 py-2 w-full`}
-              ></input>
-            </span>
-
-            <span>
-              <label
-                className={`${
-                  toggle === false ? theme.textLight : theme.textDark
-                } mx-1 font-semibold`}
-              >
-                Company Name
-              </label>
-              <input
-                type="text"
-                value={detials.CompanyName}
-                placeholder="example : company_xyz"
-                onChange={(e) => {
-                  setDetails((prevDetails) => ({
-                    ...prevDetails,
-                    CompanyName: e.target.value,
+                    otp: e.target.value,
                   }));
                 }}
                 className={`rounded-lg text-black border-2 ${
@@ -214,37 +168,97 @@ function ProgressBarForm() {
     }
   };
 
+  const sendMail = async () => {
+    setIsSending(true);
+    try {
+      const response = await axios.post("/api/sendMail", {
+        email: details.Email,
+        name: details.UserName,
+      });
+
+      if (response.status === 200) {
+        setOtp(response.data.otp);
+      } else {
+        toast.error("Failed to send booking confirmation.");
+        console.error(response.data?.message || "Unknown error");
+      }
+    } catch (error: any) {
+      toast.error("Booking not done");
+      console.error(
+        "Error sending email:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   const Back = () => {
     setProgress((prev) => Math.max(prev - 1, 0));
   };
 
-  const Next = () => {
-    setProgress((prev) => Math.min(prev + 1, 3));
+  const Next = async () => {
+    if (details.UserName === "" && details.Email == "") {
+      toast.error("Don't leave any field empty");
+      return;
+    }
+    if (details.Password == "" || details.ConfirmPassword == "") {
+      toast.error("Fill Password and Confirm Password");
+      return;
+    }
+    if (details.Password !== details.ConfirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+    await sendMail();
+
+    if (!isSending) {
+      toast.success("OTP sent to your email");
+      setProgress((prev) => Math.min(prev + 1, 3));
+    }
   };
 
-  const submit = () => {
-    console.log("Form Submitted with Data:", detials);
-    alert("Form Submitted!");
+  const submit = async () => {
+    if (details.otp !== OTP) {
+      toast.error("Wrong OTP");
+      return; // stop execution if wrong OTP
+    }
+
+    try {
+      const response = await axios.post("/api/login", {
+        email: details.Email,
+        name: details.UserName,
+      });
+
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Logged in!");
+        onLoginSuccess();
+      } else {
+        toast.error(response.data.error || "Login failed");
+      }
+    } catch (error) {
+      toast.error("Error logging in");
+      console.error(error);
+    }
   };
 
-  const [toggle, setToggle] = useState(false);
-  const [theme, setTheme] = useState({
-    ProgressColorLight: "bg-gray-200/[0.1]",
-    ProgressColorDark: "bg-black",
-    PrimaryColorLight: "bg-gray-100",
-    BorderLight: "border-gray-300",
-    PrimaryColorDark: "bg-gray-400/[0.2]",
-    BorderDark: "border-gray-500",
-    textLight: "text-black",
-    textDark: "text-white",
-  });
 
   return (
     <div
       className={`h-screen w-screen overflow-hidden ${
         toggle === false ? "bg-white" : "bg-black"
-      } flex items-center justify-center text-black/[0.5] select-none transition duration-300`}
+      } flex flex-col items-center justify-center text-black/[0.5] select-none transition duration-300`}
     >
+      <Toaster />
+      <div
+        className={`text-[3rem] font-semibold ${
+          toggle == false ? "text-black" : "text-white"
+        }`}
+      >
+        Kanban Board
+      </div>
+
       <div className="hidden md:flex absolute right-10 top-10">
         <button
           onClick={() => setToggle(!toggle)}
@@ -286,31 +300,25 @@ function ProgressBarForm() {
         </button>
       </div>
       <div
-        className={`border-2 ${
+        className={`relative border-2 ${
           toggle === false
             ? `${theme.PrimaryColorLight} border-gray-300`
             : `${theme.PrimaryColorDark} border-gray-500`
-        }  h-screen w-screen md:h-[90%] md:w-[40%] rounded-xl p-4`}
+        }  h-screen w-screen md:h-[85%] md:w-[40%] rounded-xl p-4`}
       >
-        <span>
+        <span className="flex items-center text-2xl">
           <p
-            className={`capitalize text-2xl ${
+            className={`capitalize ${
               toggle === false ? "text-black" : "text-white"
             } font-bold tracking-wide`}
           >
-            Welcome, fill the form
-          </p>
-          <p
-            className={`font-semibold ${
-              toggle === false ? "text-black" : "text-gray-300"
-            }`}
-          >
-            enter your details below
+            SIGN IN,
+            <span className="italic lowercase"> enter your details</span>
           </p>
         </span>
 
         <div className="flex justify-around mt-4">
-          {[...Array(4).keys()].map((i) => (
+          {stages.map((_, i) => (
             <div key={i} className="flex flex-col items-center justify-center">
               <div
                 className={` ${
@@ -347,26 +355,20 @@ function ProgressBarForm() {
               toggle === false ? "bg-black" : "bg-white"
             } rounded-lg absolute transition-all duration-300`}
             style={{
-              width:
-                progress === 0
-                  ? "13%"
-                  : progress === 1
-                  ? "40%"
-                  : progress === 2
-                  ? "67%"
-                  : "100%",
+              width: progress === 0 ? "26%" : "100%",
             }}
           ></span>
         </div>
 
         <div>{renderform()}</div>
 
-        {progress < 3 && (
-          <div className="mt-8 flex  items-end justify-between px-4">
+        {progress < 1 && (
+          <div className="flex justify-around absolute bottom-4 w-full">
             <button
+              type="button"
               onClick={Back}
               className={`${
-                progress > 0 ? "bg-black text-white" : "bg-gray-200/[0.3]"
+                progress > 0 ? "bg-black text-white" : "hidden"
               } rounded-lg px-4 py-2 flex items-center justify-center`}
             >
               <svg
@@ -386,12 +388,13 @@ function ProgressBarForm() {
               Back
             </button>
             <button
+              type="button"
               onClick={Next}
               className={`${
-                progress === 3 ? "bg-gray-200" : "bg-black text-white"
+                progress === 1 ? "bg-gray-200" : "bg-black text-white"
               }  text-white rounded-lg px-4 py-2 flex items-center justify-center`}
             >
-              Next
+              {isSending ? "Sending..." : "Next"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -409,9 +412,10 @@ function ProgressBarForm() {
             </button>
           </div>
         )}
-        {progress === 3 && (
-          <div className="mt-8 flex items-end justify-between px-4">
+        {progress === 1 && (
+          <div className="flex justify-around absolute bottom-4 w-full">
             <button
+              type="button"
               onClick={Back}
               className={`${
                 progress > 0 ? "bg-black text-white" : "bg-gray-200 "
@@ -434,8 +438,9 @@ function ProgressBarForm() {
               Back
             </button>
             <button
-              onSubmit={submit}
-              className={`bg-black text-white rounded-lg px-4 py-2 flex items-center justify-center`}
+              type="button"
+              onClick={submit}
+              className={`bg-green-500 active:scale-[0.95] text-white rounded-lg px-4 py-2 flex items-center justify-center`}
             >
               SUBMIT
               <svg

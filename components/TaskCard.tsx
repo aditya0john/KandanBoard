@@ -31,10 +31,7 @@ function TaskCard({ task, color }: TaskCardProps) {
         className={`text-lg font-mono rounded-t-lg p-1 capitalize flex items-center justify-between px-1`}
         style={{ backgroundColor: color }}
       >
-        <span>
-          {task.title}
-          {color}
-        </span>
+        <span>{task.title}</span>
         <span
           className={`h-2 w-2 rounded-full ${
             task.priority === "LOW"

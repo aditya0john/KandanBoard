@@ -1,11 +1,23 @@
 "use client";
 
-import KandanBoard from "@/components/KandanBoard";
-import LogIn from "@/components/LogIn";
-import { useState } from "react";
+import KanbanBoard from "@/components/KanbanBoard";
+import ProgressBarForm from "@/components/ProgressBarForm";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined);
 
-  return !loggedIn ? <LogIn /> : <KandanBoard />;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) setLoggedIn(true);
+    else setLoggedIn(false);
+  }, []);
+
+  if (loggedIn === undefined) return null;
+
+  return !loggedIn ? (
+    <ProgressBarForm onLoginSuccess={() => setLoggedIn(true)} />
+  ) : (
+    <KanbanBoard />
+  );
 }
