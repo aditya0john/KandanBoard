@@ -19,11 +19,13 @@ import { CiCirclePlus } from "react-icons/ci";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { theme } from "@/lib/data";
+import { useRouter } from "next/navigation";
 
-function KandanBoard() {
+function KandanBoard({ onLogOutSuccess }: { onLogOutSuccess: () => void }) {
   // const [COLUMNS, setColumns] = useState<Columns[]>([]);
   // const [TASKS, setTasks] = useState<Task[]>([]);
   const [toggle, setToggle] = useState(false);
+  const router = useRouter();
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -171,10 +173,15 @@ function KandanBoard() {
     });
   }
 
+  const logOut= async () =>{
+    localStorage.removeItem("token");
+    onLogOutSuccess();
+  }
+
   return (
     <div
       className={`h-screen w-screen text-white flex flex-col items-center justify-center select-none transition duration-300
-    ${toggle == false ? 'bg-white' : "bg-[#190d05]"}`}
+    ${toggle == false ? "bg-white" : "bg-[#190d05]"}`}
     >
       <Toaster position="top-center" reverseOrder={true} />
 
@@ -186,7 +193,15 @@ function KandanBoard() {
         Kanban Board
       </div>
 
-      <div className="hidden md:flex absolute right-10 top-10">
+      <div className="hidden md:flex gap-4 absolute right-10 top-4">
+        <button
+        onClick={logOut}
+          className={`bg-red-300 rounded-lg hover:rounded-full p-2 ${
+            toggle == false ? "text-black" : "text-white"
+          }`}
+        >
+          LOGOUT
+        </button>
         <button
           onClick={() => setToggle(!toggle)}
           className={`border-2 rounded-full p-2 ${
@@ -200,7 +215,7 @@ function KandanBoard() {
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="white"
-              className="w-7 h-7"
+              className="w-6 h-6"
             >
               <path
                 strokeLinecap="round"
@@ -292,11 +307,20 @@ function KandanBoard() {
             onClick={addNewColumn}
             className="flex items-center justify-center active:scale-[0.9] mr-2 absolute right-0"
           >
-            <CiCirclePlus
-              color={toggle == false ? "black" : "white"}
-              size={60}
-              className="active:scale-[0.95]"
-            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill={toggle == false ? "black" : "white"}
+              viewBox="0 0 24 24"
+              strokeWidth="1"
+              stroke={toggle == false ? "white" : "black"}
+              className="size-16"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
           </button>
         </div>
       )}

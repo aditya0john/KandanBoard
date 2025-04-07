@@ -23,7 +23,7 @@ function TaskCard({ task, color }: TaskCardProps) {
       {...listeners}
       {...attributes}
       aria-describedby={`DndDescribedBy-${task.id}`}
-      className={`h-24 w-full rounded-lg bg-gray-900/[0.4] shadow-sm hover:shadow-md hover:scale-[1.02] transform duration-75 cursor-grab active:cursor-grabbing 
+      className={`h-24 w-full rounded-lg bg-gray-500/[0.6] shadow-sm hover:shadow-md hover:scale-[1.02] transform duration-75 cursor-grab active:cursor-grabbing 
         ${task.status === "DONE" ? " opacity-70 line-through" : ""}`}
       style={style}
     >
@@ -43,7 +43,7 @@ function TaskCard({ task, color }: TaskCardProps) {
         />
       </div>
 
-      <div className="text-sm font-mono text-neutral-200 italic px-2">
+      <div className="text-sm font-mono text-neutral-100 italic px-2">
         {" "}
         &middot; {task.description}
       </div>

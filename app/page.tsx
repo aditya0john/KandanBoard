@@ -18,6 +18,6 @@ export default function Home() {
   return !loggedIn ? (
     <ProgressBarForm onLoginSuccess={() => setLoggedIn(true)} />
   ) : (
-    <KanbanBoard />
+    <KanbanBoard onLogOutSuccess={() => setLoggedIn(false)} />
   );
 }
