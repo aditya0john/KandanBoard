@@ -10,7 +10,7 @@ export async function GET() {
     console.log("✅ MongoDB connected");
 
     const tasks = await Task.find();
-    console.log("📦 Found columns:", tasks);
+    console.log("📦 Found tasks:", tasks);
 
     return NextResponse.json(tasks, { status: 200 });
   } catch (err: any) {

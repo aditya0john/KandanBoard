@@ -4,13 +4,7 @@ const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   dueDate: { type: String, required: true },
-  status: { type: String, required: true },
-  priority: { type: String, default: "LOW" },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
+  priority: { type: String },
   columnId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Column",

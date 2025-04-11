@@ -1,16 +1,15 @@
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE'| string;
-
 export type Task = {
-  id: string;
-  status: TaskStatus;
+  _id: string;
   title: string;
-  priority:string;
-  dueDate:string;
+  priority: string;
+  dueDate: string;
   description: string;
+  columnId: string;
 };
 
 export type Columns = {
-  id: TaskStatus;
+  _id: string;
   title: string;
-  color:string;
+  color: string;
+  userId: string;
 };

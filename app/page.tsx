@@ -1,7 +1,7 @@
 "use client";
 
 import KanbanBoard from "@/components/KanbanBoard";
-import ProgressBarForm from "@/components/ProgressBarForm";
+import Login from "@/components/Login";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
   if (loggedIn === undefined) return null;
 
   return !loggedIn ? (
-    <ProgressBarForm onLoginSuccess={() => setLoggedIn(true)} />
+    <Login onLoginSuccess={() => setLoggedIn(true)} />
   ) : (
     <KanbanBoard onLogOutSuccess={() => setLoggedIn(false)} />
   );
