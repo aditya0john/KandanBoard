@@ -251,6 +251,7 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
         name: details.UserName,
         otp: details.otp,
         correctOtp: OTP,
+        password: details.Password,
       });
 
       if (response.data?.token) {
