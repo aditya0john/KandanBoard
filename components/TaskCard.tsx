@@ -3,6 +3,10 @@ import { Task } from "../lib/Types";
 import { useState } from "react";
 import CreateTask from "./CreateTask";
 
+import { MdDeleteForever } from "react-icons/md";
+import axios from "axios";
+import toast from "react-hot-toast";
+
 type TaskCardProps = {
   classname?: string;
   toggle: boolean;
@@ -28,6 +32,16 @@ function TaskCard({
         transform: `translate(${transform.x}px, ${transform.y}px)`,
       }
     : undefined;
+
+  const deleteTask = async () => {
+    try {
+      await axios.delete(`/api/tasks/manage/${task._id}`);
+      toast.success("task deleted");
+      onTaskCreated(task);
+    } catch (error) {
+      toast.error("Failed to delete task");
+    }
+  };
 
   return (
     <div className="flex">
@@ -66,7 +80,7 @@ function TaskCard({
         </div>
       </div>
       <span
-        className={`${
+        className={`flex flex-col items-center justify-between ${
           toggle === false ? "bg-[#190d05]/[0.2]" : "bg-[#fcf5e5]/[0.4]"
         } rounded-r-lg p-2`}
       >
@@ -77,7 +91,7 @@ function TaskCard({
             viewBox="0 0 24 24"
             strokeWidth="2"
             stroke={toggle === false ? "black" : "white"}
-            className="size-6 active:scale-[0.95]"
+            className="size-5 active:scale-[0.95]"
           >
             <path
               strokeLinecap="round"
@@ -94,6 +108,13 @@ function TaskCard({
               onTaskCreated={(task) => onTaskCreated(task)}
             />
           )}
+        </span>
+        <span className="cursor-pointer" onClick={deleteTask}>
+          <MdDeleteForever
+            color={toggle == false ? "black" : "white"}
+            size={24}
+            className="active:scale-[0.95]"
+          />
         </span>
       </span>
     </div>

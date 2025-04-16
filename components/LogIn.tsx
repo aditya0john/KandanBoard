@@ -176,14 +176,35 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
         name: details.UserName,
       });
 
+      const { message, otp, alreadyExists } = response.data;
+
       if (response.status === 200) {
-        setOtp(response.data.otp);
+        toast.success(message + "\n" + details.Email);
+
+        if (!alreadyExists) {
+          setOtp(otp);
+          setProgress((prev) => Math.min(prev + 1, 3));
+        } else {
+          setSignUp(true);
+          toast.success("Continue to LogIn", {
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              color: "#190d05",
+            },
+            iconTheme: {
+              primary: "#713200",
+              secondary: "#FFFAEE",
+            },
+          });
+          console.warn("User already exists. Skipping progress update.");
+        }
       } else {
-        toast.error("Failed to send booking confirmation.");
-        console.error(response.data?.message || "Unknown error");
+        toast.error(message);
+        console.error(message || "Unknown error");
       }
     } catch (error: any) {
-      toast.error("Booking not done");
+      toast.error("OTP ERROR");
       console.error(
         "Error sending email:",
         error.response?.data || error.message
@@ -202,25 +223,23 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
       toast.error("Don't leave any field empty");
       return;
     }
-    if (details.Password == "" || details.ConfirmPassword == "") {
+    if (
+      details.Password == "" ||
+      (details.ConfirmPassword == "" && signUp === false)
+    ) {
       toast.error("Fill Password and Confirm Password");
       return;
     }
-    if (details.Password !== details.ConfirmPassword) {
+    if (details.Password !== details.ConfirmPassword && signUp === false) {
       toast.error("Passwords don't match");
       return;
     }
-    await sendMail();
-
-    if (!isSending) {
-      toast.success("OTP sent to your email");
-      setProgress((prev) => Math.min(prev + 1, 3));
-    }
+    if (!signUp) await sendMail();
   };
 
   const submit = async () => {
     if (details.otp !== OTP) {
-      toast.error("Wrong OTP");
+      toast.error(`Wrong OTP ${OTP}`);
       return; // stop execution if wrong OTP
     }
 
@@ -343,8 +362,8 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
                     i <= progress && toggle === false
                       ? `${theme.ProgressColorDark} text-white`
                       : i <= progress && toggle === true
-                      ? `bg-white text-black`
-                      : `${theme.ProgressColorLight} text-gray-300`
+                        ? `bg-white text-black`
+                        : `${theme.ProgressColorLight} text-gray-300`
                   } h-[60px] w-[60px] rounded-full flex items-center justify-center text-xl`}
                 >
                   {i + 1}
