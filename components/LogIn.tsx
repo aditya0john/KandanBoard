@@ -1,7 +1,6 @@
 "use client";
 import { theme } from "@/lib/data";
 import axios from "axios";
-import { em } from "framer-motion/client";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 

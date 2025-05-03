@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import KanbanBoard from "../components/KanbanBoard";
-import Login from "../components/Login";
+import KanbanBoard from "@/components/KanbanBoard";
+import Login from "@/components/Login";
+
 
 export default function Home() {
   const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined);
