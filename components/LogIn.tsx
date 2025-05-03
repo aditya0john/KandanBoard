@@ -1,6 +1,7 @@
 "use client";
 import { theme } from "@/lib/data";
 import axios from "axios";
+import { em } from "framer-motion/client";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -237,9 +238,32 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
     if (!signUp) await sendMail();
   };
 
+  const LoginUser = async () => {
+    try {
+      const response = await axios.post("/api/loginUser", {
+        email: details.Email,
+        password: details.Password,
+      });
+
+      if (response.data?.token) {
+        toast.success(`Welcome back ${details.UserName}`);
+        console.log("response.data", response.data);
+
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("userName", response.data.userName);
+        localStorage.setItem("userEmail", response.data.userEmail);
+        onLoginSuccess();
+      }
+    } catch (error) {
+      toast.error("Error logging in");
+      console.error(error);
+    }
+  };
+
   const submit = async () => {
     if (details.otp !== OTP) {
-      toast.error(`Wrong OTP ${OTP}`);
+      toast.error(`Wrong OTP`);
       return; // stop execution if wrong OTP
     }
 
@@ -427,7 +451,7 @@ function Login({ onLoginSuccess }: { onLoginSuccess: () => void }) {
             </button>
             <button
               type="button"
-              onClick={Next}
+              onClick={signUp === false ? Next : LoginUser}
               className={`${
                 progress === 1 ? "bg-gray-200" : "bg-black text-white"
               }  text-white rounded-lg px-4 py-2 flex items-center justify-center`}
